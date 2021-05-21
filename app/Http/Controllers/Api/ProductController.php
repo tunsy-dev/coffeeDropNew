@@ -25,11 +25,14 @@ class ProductController extends Controller
             {
                 //if it's not null, let's do something
                 $prices = $thisProduct->pricetiers;
-                
+                //Work out how many we have total
+                //work out how many in each tier we need to use
+                //add that to a second (sun) inside here - on $tot
+                //then return $total
             }
             return $tot;
         });
-        dd($products);
+        dd($products); //will be the total cashback
 
 
 
