@@ -13,4 +13,9 @@ class Product extends Model
         return $this->belongsToMany(coffeeDrops::class)
         ->withPivot(['quantity']);
     }
+
+    public function priceTiers()
+    {
+        return $this->belongsToMany(PriceTier::class);
+    }
 }

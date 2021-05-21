@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCashbackRulesTable extends Migration
+class CreatePriceTiersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateCashbackRulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cashback_rules', function (Blueprint $table) {
+        Schema::create('price_tiers', function (Blueprint $table) {
             $table->id();
-            $table->string('quantity');
-            $table->string('product_1');
-            $table->string('product_2');
-            $table->string('product_3');
+            $table->integer('min');
+            $table->integer('max')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateCashbackRulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cashback_rules');
+        Schema::dropIfExists('price_tiers');
     }
 }
