@@ -2,7 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Location;
+use App\Models\OpeningTime;
+use App\Models\User;
+use Exception;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Http;
+use League\Csv\Reader;
 
 class UserAndVenueSeeder extends Seeder
 {
@@ -30,7 +36,7 @@ class UserAndVenueSeeder extends Seeder
 
         $postcodes = collect($records)->pluck('postcode')->toArray(); //returns the CSV document as a string
         try{
-            $response = Http::post('api.postcodes.io/postcodes', ['postcodes' => $postcodes ]);
+            $response = Http::post('api.postcodes.io/postcodes', ['postcodes' => $postcodes]);
         }
         catch( Exception $e ){
             return $e->getMessage();

@@ -26,24 +26,22 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/past-drops', [ProductController::class, 'index']);
 Route::get('/locations', [LocationController::class, 'index']);
 // get nearest location route
 Route::get('/location/postcode', [LocationController::class, 'nearestLocation']);
+Route::post('products/quote', [ProductController::class, 'store']);
 
 // sanctum protected routes inside
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // logout
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('products/quote', [ProductController::class, 'store']);
     // post create new location route
-    // Route::post('/locations', [LocationController::class, 'store']);
-    // post calcualte cashback quote
-    // Route::post('products/quote', [ProductController::class, 'index']);
+    Route::post('/locations', [LocationController::class, 'store']);
 });
-Route::post('/locations', [LocationController::class, 'store']);
-
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
 
 // sanctum routes
 Route::post('/sanctum/token', function (Request $request) {

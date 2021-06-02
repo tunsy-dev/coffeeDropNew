@@ -45,5 +45,8 @@ class User extends Authenticatable
     public function coffeeDrops() {
         return $this->hasMany(CoffeeDrop::class);
     }
+    public function pastDrops() {
+        return $this->hasMany(PastDrop::class);
+    }
 
 }

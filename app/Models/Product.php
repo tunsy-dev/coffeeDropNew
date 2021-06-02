@@ -16,6 +16,6 @@ class Product extends Model
 
     public function priceTiers()
     {
-        return $this->belongsToMany(PriceTier::class);
+        return $this->belongsToMany(PriceTier::class)->withPivot(['amount_pence']);
     }
 }

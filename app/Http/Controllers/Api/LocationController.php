@@ -20,8 +20,14 @@ class LocationController extends Controller
     }
 
     public function nearestLocation(Request $request){
-        $postcode = $request->postcode;
-        // get lat and long from postcode
+        $lng = $request->lng;
+        $lat = $request->lat;
+        if( $lat != null) {
+        $locationsWithDistance = Library::getLocationsWithDistance($lat, $lng);
+        $closestLocation = $locationsWithDistance->sortBy('distance')->first();
+        return new LocationResource($closestLocation);
+        }else {
+            $postcode = $request->postcode;
         try{
             $response = Http::get("api.postcodes.io/postcodes/$postcode");
         }
@@ -32,14 +38,11 @@ class LocationController extends Controller
         $result = $response->json()['result'];
         $lng = $result['longitude'];
         $lat = $result['latitude'];
-        // dd($lng, $lat);
+
         $locationsWithDistance = Library::getLocationsWithDistance($lat, $lng);
         $closestLocation = $locationsWithDistance->sortBy('distance')->first();
-        // $closestLocation->openingTimes;
-
         return new LocationResource($closestLocation);
-        // return LocationResource::collection($closestLocation);
-        // return true;
+        }
     }
 
     // create and save a new location and opening times
@@ -52,7 +55,6 @@ class LocationController extends Controller
         catch( Exception $e ){
             return $e->getMessage();
         }
-        // this is where it stops working
         $result = $response->json()['result'];
         $location = new Location();
         $location->lng = $result['longitude'];
@@ -62,28 +64,7 @@ class LocationController extends Controller
         $location->save();
         // save opening times after location has been
         $location_id = $location->id;
-        // dd($location_id);
 
-        // saving openings
-        // $defultOpeningTimes = [
-        //     'monday' => null,
-        //     'tuesday' => null,
-        //     'wednesday' => null,
-        //     'thursday' => null,
-        //     'friday' => null,
-        //     'saturday' => null,
-        //     'sunday' => null
-        // ];
-
-        // $defultClosingTimes = [
-        //     'monday' => null,
-        //     'tuesday' => null,
-        //     'wednesday' => null,
-        //     'thursday' => null,
-        //     'friday' => null,
-        //     'saturday' => null,
-        //     'sunday' => null
-        // ];
         $defultOpeningTimes = [
             'monday' => 0,
             'tuesday' => 0,
@@ -103,18 +84,16 @@ class LocationController extends Controller
             'saturday' => 0,
             'sunday' => 0
         ];
-        //  dd($defultOpeningTimes);
+        // combining the defult opening times with the requests so that there are no null results.
         $openings = collect($request->opening_times);
         $newOpenings = collect($defultOpeningTimes)->merge($openings);
-        // dd($newOpenings);
 
         $closings = $request->closing_times;
         $newClosings = collect($defultClosingTimes)->merge($closings);
+
         $openings = $newOpenings;
         $closings = $newClosings;
-        // dd($openings);
-        // dd($closings);
-        // $opening_times = new OpeningTime();
+
         $openings->each(function($opening, $key) use ($closings, $location_id){
             // dd(gettype($location_id));
           $day = (array_flip(config('enums.day_of_the_week'))[$key]);

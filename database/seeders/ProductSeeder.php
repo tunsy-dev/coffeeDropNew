@@ -16,7 +16,7 @@ class ProductSeeder extends Seeder
     public function run()
     {
         $ristretto = new Product();
-        $ristretto->name = 'Risretto';
+        $ristretto->name = 'Ristretto';
         $ristretto->save();
 
         $espresso = new Product();
@@ -53,7 +53,5 @@ class ProductSeeder extends Seeder
         $lungo->priceTiers()->attach($pt1,['amount_pence'=>6]);
         $lungo->priceTiers()->attach($pt2,['amount_pence'=>9]);
         $lungo->priceTiers()->attach($pt3,['amount_pence'=>15]);
-
-
     }
 }
